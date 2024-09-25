@@ -12,7 +12,7 @@ class CarListView(generics.ListAPIView):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
     filter_backends = [DjangoFilterBackend]
-    filterer_fields = ['make', 'year', 'price']
+    filter_fields = ['make', 'year', 'price']
     permission_classes = [permissions.BasePermission]
 
 # Retrieve, update, delete a car
