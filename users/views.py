@@ -12,7 +12,7 @@ class UserRegster(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        clean_data =custom_validation(request.data)
+        clean_data = custom_validation(request.data)
         serializer = UserRegsterSerializer(data=clean_data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.create(clean_data)
@@ -23,6 +23,7 @@ class UserRegster(APIView):
 
 class UserLogin(APIView):
     permission_classes = (permissions.AllowAny,)
+    authentication_classes = (JWTAuthentication,)
 
     def post(self, request):
         data = request.data
@@ -33,7 +34,10 @@ class UserLogin(APIView):
             user = serializer.check_user(data)
             refresh = RefreshToken.for_user(user)
             return Response({
-                'user': serializer.data,
+                'user': {
+                    'email': user.email,
+                    'username': user.username
+                },
                 'refresh': str(refresh),
                 'access': str(refresh.access_token)},
                 status=status.HTTP_200_OK)
